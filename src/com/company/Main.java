@@ -1,39 +1,54 @@
 package com.company;
 
 import com.opencsv.CSVReader;
+
+import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
+import java.util.Scanner;
 
 /**
- * Главный класс, где мы находим csv файл, создаем случайным образом идентификатор подразделения,
- * заносим значения в соответствующий класс и выводим их в консоль.
+ * Мейн
+ * В нем выполняется считывание из файла csv, генерация id для 2 сущности, добавление в объект типа List людей из файла и печать.
+ * "C:\JavaProject4.1\src\com\company\foreign_names.csv"
  */
-
 public class Main {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Пожалуйста, введите полный путь до нужного вам файла, включая само его название! ");
+        String directory = scanner.next();
+        int check = 0;
+        int num = 0;
+        try {
 
-    public static  void main(String[] args) throws IOException {
 
-        FileReader file = new FileReader("C:\\JavaProject4.1\\src\\com\\company\\foreign_names.csv");
-        CSVReader reader = new CSVReader(file, ';');
-        String[] nextLine;
-        List<Person> person = new ArrayList<>();
+            FileReader file = new FileReader(directory);
+            CSVReader reader = new CSVReader(file, ';');
+            if (reader == null)
+            {
+                throw new FileNotFoundException(directory);
+            }
+            String[] nextStr;
+            List<Human> hmn = new ArrayList<>();
 
-        while ((nextLine = reader.readNext()) != null) {
-            Random random = new Random();
-            int num = random.nextInt(25000);
-            person.add(new Person(nextLine[0], nextLine[1], nextLine[2], nextLine[5], nextLine[3], nextLine[4],num));
+            while ((nextStr = reader.readNext()) != null) {
+                Random rndm = new Random();
+                if (check == 0) {
+                    num = rndm.nextInt(4000);
+                    check ++;
+                }
+                else {num++;}
+                hmn.add(new Human(nextStr[0], nextStr[1], nextStr[2], nextStr[5], nextStr[3], nextStr[4], num));
 
-        }
-        for (int i = 1; i < person.size(); i++) {
-            System.out.print(person.get(i).getId()+"; ");
-            System.out.print(person.get(i).getName()+"; ");
-            System.out.print(person.get(i).getGender()+"; ");
-            System.out.print(person.get(i).getBirthDate()+"; ");
-            System.out.print(person.get(i).getSubdTitle()+"; ");
-            System.out.print(person.get(i).getSubdId()+"; ");
-            System.out.print(person.get(i).getSalary()+"; ");
-            System.out.println();
+            }
+            for (int i = 1; i < hmn.size(); i++) {
+                System.out.print(hmn.get(i).getId() + "; " + hmn.get(i).getName() + "; " + hmn.get(i).getGender() + "; " + hmn.get(i).getBirthDate() + "; " + hmn.get(i).getSubdTitle() + "; " + hmn.get(i).getSubdId() + "; " + hmn.get(i).getSalary() + "; ");
+                System.out.println();
+            }
+
+        } catch (Exception ex) {
+
+            System.out.println(ex.getMessage());
         }
 
     }
